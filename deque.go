@@ -27,7 +27,7 @@ func newDeque_IV(capacity uint) *deque_IV {
 	}
 }
 
-func (d *deque_IV) PushFront(index uint, value float32) {
+func (d *deque_IV) PushFront(index uint, value float64) {
 	d.front--
 	d.front &= d.mask
 	d.items[d.front].i = index
@@ -35,7 +35,7 @@ func (d *deque_IV) PushFront(index uint, value float32) {
 	d.size++
 }
 
-func (d *deque_IV) PushBack(index uint, value float32) {
+func (d *deque_IV) PushBack(index uint, value float64) {
 	d.items[d.back].i = index
 	d.items[d.back].v = value
 	d.back++
@@ -84,11 +84,11 @@ func (d *deque_IV) Size() uint {
 
 //// deque_f32 /////////////////////////////////////////////////////////////////
 
-// deque_f32 is a bounded deque with a fixed capacity to store float32 values.
+// deque_f32 is a bounded deque with a fixed capacity to store float64 values.
 // It is implemented as a power-of-two sized ring buffer for efficient wrapping
 // around of the front and back indices.
 type deque_f32 struct {
-	items []float32
+	items []float64
 	front uint // front item index
 	back  uint // back item index
 	size  uint // number of items
@@ -98,26 +98,26 @@ type deque_f32 struct {
 func newDeque_f32(capacity uint) *deque_f32 {
 	capacity = nextPowerOfTwo(capacity + 1)
 	return &deque_f32{
-		items: make([]float32, capacity),
+		items: make([]float64, capacity),
 		mask:  capacity - 1,
 	}
 }
 
-func (d *deque_f32) PushFront(value float32) {
+func (d *deque_f32) PushFront(value float64) {
 	d.front--
 	d.front &= d.mask
 	d.items[d.front] = value
 	d.size++
 }
 
-func (d *deque_f32) PushBack(value float32) {
+func (d *deque_f32) PushBack(value float64) {
 	d.items[d.back] = value
 	d.back++
 	d.back &= d.mask
 	d.size++
 }
 
-func (d *deque_f32) PopFront() float32 {
+func (d *deque_f32) PopFront() float64 {
 	item := d.items[d.front]
 	d.size--
 	d.front++
@@ -125,7 +125,7 @@ func (d *deque_f32) PopFront() float32 {
 	return item
 }
 
-func (d *deque_f32) PopBack() float32 {
+func (d *deque_f32) PopBack() float64 {
 	d.size--
 	d.back--
 	d.back &= d.mask
@@ -144,11 +144,11 @@ func (d *deque_f32) PruneBack() {
 	d.back &= d.mask
 }
 
-func (d *deque_f32) FrontItem() float32 {
+func (d *deque_f32) FrontItem() float64 {
 	return d.items[d.front]
 }
 
-func (d *deque_f32) BackItem() float32 {
+func (d *deque_f32) BackItem() float64 {
 	return d.items[(d.back-1)&d.mask]
 }
 
@@ -202,7 +202,7 @@ func (q *intfloatqueue) count() uint {
 	return (q.tail - q.head) & q.mask
 }
 
-func (q *intfloatqueue) push(index uint, value float32) {
+func (q *intfloatqueue) push(index uint, value float64) {
 	q.nodes[q.tail].index = index
 	q.nodes[q.tail].value = value
 	q.tail = (q.tail + 1) & q.mask
@@ -218,7 +218,7 @@ func (q *intfloatqueue) tailnode() *intfloatnode {
 	return q.nodes[(q.tail-1)&q.mask]
 }
 
-func (q *intfloatqueue) tailvalue() float32 {
+func (q *intfloatqueue) tailvalue() float64 {
 	return q.nodes[(q.tail-1)&q.mask].value
 }
 
@@ -244,16 +244,16 @@ func (q *intfloatqueue) headindex() uint {
 	return q.nodes[q.head].index
 }
 
-func (q *intfloatqueue) headvalue() float32 {
+func (q *intfloatqueue) headvalue() float64 {
 	return q.nodes[q.head].value
 }
 
 type intfloatnode struct {
 	index uint
-	value float32
+	value float64
 }
 
-func newintfloatnode(i uint, v float32) *intfloatnode {
+func newintfloatnode(i uint, v float64) *intfloatnode {
 	return &intfloatnode{
 		index: i,
 		value: v,

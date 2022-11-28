@@ -16,9 +16,7 @@ allocations during updates.
 */
 package movingminmax
 
-import (
 //	"fmt"
-)
 
 //// MovingMinMax //////////////////////////////////////////////////////////////
 
@@ -40,7 +38,7 @@ func NewMovingMinMax(w uint) *MovingMinMax {
 }
 
 // Update updates the statistics with the given sample value.
-func (m *MovingMinMax) Update(value float32) {
+func (m *MovingMinMax) Update(value float64) {
 	if m.up.Size() > 0 {
 		if value > m.up.BackItem().v {
 			m.up.PruneBack()
@@ -68,12 +66,12 @@ func (m *MovingMinMax) Update(value float32) {
 }
 
 // Min returns the current moving minimum.
-func (m *MovingMinMax) Min() float32 {
+func (m *MovingMinMax) Min() float64 {
 	return m.lo.FrontItem().v
 }
 
 // Max returns the current moving maximum.
-func (m *MovingMinMax) Max() float32 {
+func (m *MovingMinMax) Max() float64 {
 	return m.up.FrontItem().v
 }
 
@@ -95,7 +93,7 @@ func NewMovingMin(w uint) *MovingMin {
 }
 
 // Update updates the statistics with the given sample value.
-func (m *MovingMin) Update(value float32) {
+func (m *MovingMin) Update(value float64) {
 	if (m.lo.Size() > 0) && (value < m.lo.BackItem().v) {
 		m.lo.PruneBack()
 		for (m.lo.Size() > 0) && (value <= m.lo.BackItem().v) {
@@ -112,7 +110,7 @@ func (m *MovingMin) Update(value float32) {
 }
 
 // Min returns the current moving minimum.
-func (m *MovingMin) Min() float32 {
+func (m *MovingMin) Min() float64 {
 	return m.lo.FrontItem().v
 }
 
@@ -134,7 +132,7 @@ func NewMovingMax(w uint) *MovingMax {
 }
 
 // Update updates the statistics with the given sample value.
-func (m *MovingMax) Update(value float32) {
+func (m *MovingMax) Update(value float64) {
 	if (m.up.Size() > 0) && (value > m.up.BackItem().v) {
 		m.up.PruneBack()
 		for (m.up.Size() > 0) && (value >= m.up.BackItem().v) {
@@ -151,7 +149,7 @@ func (m *MovingMax) Update(value float32) {
 }
 
 // Max returns the current moving maximum.
-func (m *MovingMax) Max() float32 {
+func (m *MovingMax) Max() float64 {
 	return m.up.FrontItem().v
 }
 
@@ -160,9 +158,9 @@ func (m *MovingMax) Max() float32 {
 // MovingMean maintains moving mean statistics.
 type MovingMean struct {
 	ww   uint
-	mean float32
-	sum  float32
-	invw float32
+	mean float64
+	sum  float64
+	invw float64
 	dq   *deque_f32
 }
 
@@ -170,7 +168,7 @@ type MovingMean struct {
 func NewMovingMean(w uint) *MovingMean {
 	mmean := MovingMean{
 		ww:   w,
-		invw: 1.0 / float32(w),
+		invw: 1.0 / float64(w),
 		dq:   newDeque_f32(w),
 	}
 	// init deque
@@ -179,14 +177,14 @@ func NewMovingMean(w uint) *MovingMean {
 	return &mmean
 }
 
-func (m *MovingMean) Update(value float32) {
+func (m *MovingMean) Update(value float64) {
 	m.dq.PushFront(value)
 	m.sum -= m.dq.PopBack()
 	m.sum += value
 	m.mean = m.sum * m.invw
 }
 
-func (m *MovingMean) Mean() float32 {
+func (m *MovingMean) Mean() float64 {
 	return m.mean
 }
 
@@ -211,7 +209,7 @@ func NewMovingMinMax0(w uint) *MovingMinMax0 {
 }
 
 // Update updates the moving statistics with the given sample value.
-func (m *MovingMinMax0) Update(value float32) {
+func (m *MovingMinMax0) Update(value float64) {
 	if m.up.nonempty() {
 		if value > m.up.tailvalue() {
 			m.up.prunetail()
@@ -237,12 +235,12 @@ func (m *MovingMinMax0) Update(value float32) {
 }
 
 // Min returns the current moving minimum.
-func (m *MovingMinMax0) Min() float32 {
+func (m *MovingMinMax0) Min() float64 {
 	return m.lo.headvalue()
 }
 
 // Max returns the current moving maximum.
-func (m *MovingMinMax0) Max() float32 {
+func (m *MovingMinMax0) Max() float64 {
 	return m.up.headvalue()
 }
 
@@ -250,5 +248,5 @@ func (m *MovingMinMax0) Max() float32 {
 
 type _IV struct {
 	i uint    // sample index
-	v float32 // sample value
+	v float64 // sample value
 }

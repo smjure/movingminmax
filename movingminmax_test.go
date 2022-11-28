@@ -16,20 +16,20 @@ const (
 )
 
 var (
-	values       []float32 // input sample values
-	mmins, mmaxs []float32 // reference results
+	values       []float64 // input sample values
+	mmins, mmaxs []float64 // reference results
 )
 
 // init initializes the test values.
 func init() {
-	values = make([]float32, N)
-	mmins = make([]float32, N)
-	mmaxs = make([]float32, N)
+	values = make([]float64, N)
+	mmins = make([]float64, N)
+	mmaxs = make([]float64, N)
 
 	// generate random sample values in [0.0, 1.0)
 	rand.Seed(123)
 	for i := 0; i < N; i++ {
-		values[i] = rand.Float32()
+		values[i] = rand.float64()
 	}
 	/*
 		// display reference results
